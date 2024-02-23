@@ -1,0 +1,282 @@
+
+hack 1 
+create table countries(
+  id_country serial primary key,
+  name varchar(50) not null  
+);
+
+
+create table users(
+ id_users serial primary key,
+ id_country integer not null,
+ email varchar(100) not null,
+ name varchar (50) not null,
+ foreign key (id_country) references countries (id_country)   
+);
+
+
+
+
+
+hack 2
+
+
+
+insert into countries (name) values ('Panama') , ('Canada'),('Colombia');
+select * from countries;
+
+
+
+insert into users (id_country, email, name) 
+ values (1,'pedro@gmail.com', 'Pedro'), (3,'pablo@outlook.com', 'Pablo'),
+(2,'juana@gmail.com','Juana'); 
+select * from users;
+
+
+
+delete from users where email = 'pablo@outlook.com';
+
+
+
+update users set email = 'julia@gmail.com', name = 'Julia' where id_users = 3;
+select * from users;
+
+
+
+select * from users inner join  countries on users.id_country = countries.id_country;
+
+
+
+select u.id_users as id, u.email, u.name as fullname, c.name 
+from users u inner join  countries c on u.id_country = c.id_country;
+
+
+
+
+hack 3
+
+
+create table countries(
+ id_country serial primary key, 
+ name varchar(50) not null  
+);   
+
+create table priorities(
+ id_priority serial primary key, 
+ type_name varchar(20) not null
+);  
+
+create table contact_request(
+ id_email varchar(100) primary key, id_country integer not null,
+ id_priority integer not null, name varchar (50) not null,
+ detail varchar (200) null, physical_address varchar (20) not null,
+ foreign key (id_country) references countries (id_country),   foreign key (id_priority) references priorities (id_priority)
+);
+
+
+
+hack 4
+
+insert into countries (name) values ('grecia') , ('francia'),('españa'),('protugal'),('inglaterra'); 
+
+insert into priorities (type_name) values ('level1'), ('level2'),('level3');  
+
+insert into contact_request(id_email, id_country, id_priority, name, detail,physical_address)
+values 
+('fuziman@gmail.com', 1, 1, 'fuziman', 'no tiene internet', '123456'),
+('barziman@outlook.com', 3, 2, 'barziman', 'no se conecta al servidor', '654321'),
+('echo@gmail.com', 4, 3, 'echo', 'no hay conexión', '486423');                                                                            
+
+select * from contact_request;                                                                               
+
+delete from contact_request where id_email = 'echo@gmail.com';
+select * from contact_request;
+
+delete  from contact_request where id_email = 'fuziman@gmail.com';                                                                        
+select * from contact_request;
+
+
+hack 5
+
+create table countries(
+  id_country serial primary key,
+  name varchar(50) not null  
+);
+
+create table roles(
+ id_role serial primary key,
+ name varchar(50) not null
+);
+
+create table taxes(
+  id_tax serial primary key,
+  percentage integer not null
+);
+
+create table offers(
+ id_offer serial primary key,
+ status varchar(20) not null
+);
+
+
+create table discounts(
+ id_discount serial primary key,
+ status varchar(20) not null,
+ percentage integer not null
+);
+
+
+create table payments(
+ id_payment serial primary key,
+ type varchar(20) not null
+);
+
+create table customers(
+ email varchar(100) not null,
+ id_customer serial primary key,
+ id_country integer not null,
+ id_role integer not null,
+ name varchar(50) not null,
+ age integer,
+ password varchar(100) not null,
+ physical_address varchar(100)
+-- PRIMARY KEY(email, id_customer)
+);
+
+create table invoices_status(
+ id_invoices_statusr serial primary key,
+ status varchar(20) not null
+);
+
+create table products(
+ id_product serial primary key,
+ id_discount integer not null,
+ id_offer integer not null,
+ id_tax integer not null,
+ name varchar(50) not null,
+ details varchar(100),
+ minimum_stock integer not null,
+ maximum_stock integer not null,
+ current_stock integer not null,
+ price decimal not null,
+ price_with_tax decimal not null
+);
+
+create table products_customers(
+id_product integer,
+id_customer integer,
+foreign key (id_product) references products (id_product),
+foreign key (id_customer) references customers (id_customer),
+PRIMARY KEY(id_product, id_customer)
+);
+
+create table invoices(
+ id_invoice serial primary key,
+ id_customer integer not null,
+ id_payment integer not null,
+ id_invoice_status  integer not null,
+ date date,
+ total_to_pay decimal
+);
+
+
+create table orders(
+ id_order serial primary key,
+ id_invoice integer not null,
+ id_product integer not null,
+ detail  varchar(200),
+ amount decimal,
+ price decimal
+);
+
+
+
+
+hack 6
+
+
+insert into countries (name) values  ('Francia'), ('Protugal'), ('España'); 
+
+
+insert into roles (name) values ('admin'), ('usuario'), ('cliente');
+
+insert into taxes (percentage) values (6),(8),(10);  
+ 
+
+insert into offers (status) values ('start'), ('continue'), ('ended');
+
+
+insert into discounts (status, percentage) values ('up', 10), ('stoped', 15), ('dishabled', 20) ;
+
+
+
+insert into payments (type) values ('cash'), ('check'), ('card'); 
+
+
+insert into customers   
+(email, id_country, id_role,name, age, password, physical_address) 
+ values
+('Fuziman@gmail.com', 3, 3, 'Fuziman', 22, '123456', '123456'),
+('Barziman@gmail.com', 2, 3, 'Barziman', 35, '654321', '654321'),
+('echo@gmail.com', 1, 3, 'Echo', 50, '8426874', '8426874');
+
+
+insert into invoices_status (status) values ('issued'), ('invoiced'), ('paid');
+
+
+insert into products 
+ (id_discount, id_offer, id_tax, name, details, minimum_stock, maximum_stock,
+ current_stock, price, price_with_tax ) 
+values 
+(1, 3, 1, 'iphone 11', 'camara 100mpx', 1, 100, 10, 1000, 1060), 
+(2, 1, 2, 'iphone 12', 'camara 105mpx', 1, 20, 5, 1200, 1296),
+(3, 3, 3, 'iphone 15', 'camara 120mpx', 1, 200, 150, 1500, 1650);
+
+
+
+insert into products_customers (id_product, id_customer) values (1,2), (2,3),(3,1);
+
+
+insert into invoices 
+ (id_customer, id_payment, id_invoice_status, date, total_to_pay) 
+values
+(1, 2, 1, '01/15/2024', 954),
+(2, 1, 2, '01/19/2024', 1296),
+(3, 3, 3, '02/01/2024', 1650);
+
+
+insert into orders 
+ (id_invoice, id_product, detail, amount, price)
+values  
+(1, 2, 'camara 100mpx', 1, 1000),
+(2, 3, 'camara 105mpx', 1, 1200),
+(3, 1, 'camara 120mpx', 1, 1500);
+
+
+
+
+delete from products_customers  where id_customer = 1;
+delete from customers where id_customer = 1;
+select * from customers;
+
+
+
+delete from products_customers  where id_customer = 3;
+delete from customers where id_customer = 3;
+select * from customers;
+
+
+update customers set email = 'Clienteeee' where  id_customer = 1;
+select * from customers;
+
+
+update taxes set percentage=30;
+select * from taxes;
+
+
+update products set price = 200;
+
+
+
+
+
